@@ -1,0 +1,2 @@
+AUTHY_API_KEY = <your api key>
+SECRET_KEY = <for managing sessions, can be any text string>
