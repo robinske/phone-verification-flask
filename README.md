@@ -22,4 +22,4 @@ Create a secret key for managing sessions
 
 ```python verify.py```
 
-navigate to [localhost:5000/phone_verification](localhost:5000/phone_verification) to try it out!
+navigate to `localhost:5000/phone_verification` to try it out!
