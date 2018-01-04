@@ -5,7 +5,7 @@ from flask import (Flask, Response, request, redirect,
 
 
 app = Flask(__name__)
-app.config.from_object('config.py')
+app.config.from_object('config')
 app.secret_key = app.config['SECRET_KEY']
 
 
