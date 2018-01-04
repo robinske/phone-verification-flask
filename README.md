@@ -15,8 +15,7 @@ https://www.twilio.com/console/authy/applications
 mv config.py.sample config.py
 ```
 
-And update the API key with your application key
-Create a secret key for managing sessions
+Edit `config.py` and update the API key with your application key. Create a secret key for managing sessions.
 
 ## Running
 
