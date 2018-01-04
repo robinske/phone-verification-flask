@@ -1,5 +1,4 @@
 from authy.api import AuthyApiClient
-from authy import AuthyFormatException
 from flask import (Flask, Response, request, redirect,
     render_template, session, url_for)
 
@@ -17,30 +16,28 @@ def create_verification():
     phone_number = request.form.get("phone_number")
     method = request.form.get("method")
 
-    user = api.users.create('foo@bar.com', phone_number, country_code)
-    session['authy_id'] = user.id
+    session['country_code'] = country_code
+    session['phone_number'] = phone_number
 
-    if method == "sms":
-        api.users.request_sms(user.id, {"force": True})
-    elif method == "call":
-        api.users.request_call(user.id, {"force": True})
+    api.phones.verification_start(phone_number, country_code, via=method)
 
     return redirect(url_for("verify"))
 
 
 def verify_token():
     token = request.form.get("token")
-    authy_id = session.get("authy_id")
 
-    try:
-        verification = api.tokens.verify(authy_id, token)
+    phone_number = session.get("phone_number")
+    country_code = session.get("country_code")
 
-        if verification.ok():
-            return Response("<h1>Success!</h1>")
-    except:
-        pass
+    verification = api.phones.verification_check(phone_number,
+                                                 country_code,
+                                                 token)
 
-    return render_template("verify.html")
+    if verification.ok():
+        return Response("<h1>Success!</h1>")
+    else:
+        return render_template("verify.html")
 
 
 @app.route("/phone_verification", methods=["GET", "POST"])
