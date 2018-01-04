@@ -11,47 +11,37 @@ app.secret_key = app.config['SECRET_KEY']
 api = AuthyApiClient(app.config['AUTHY_API_KEY'])
 
 
-def create_verification():
-    country_code = request.form.get("country_code")
-    phone_number = request.form.get("phone_number")
-    method = request.form.get("method")
-
-    session['country_code'] = country_code
-    session['phone_number'] = phone_number
-
-    api.phones.verification_start(phone_number, country_code, via=method)
-
-    return redirect(url_for("verify"))
-
-
-def verify_token():
-    token = request.form.get("token")
-
-    phone_number = session.get("phone_number")
-    country_code = session.get("country_code")
-
-    verification = api.phones.verification_check(phone_number,
-                                                 country_code,
-                                                 token)
-
-    if verification.ok():
-        return Response("<h1>Success!</h1>")
-    else:
-        return render_template("verify.html")
-
-
 @app.route("/phone_verification", methods=["GET", "POST"])
 def phone_verification():
     if request.method == "POST":
-        return create_verification()
+        country_code = request.form.get("country_code")
+        phone_number = request.form.get("phone_number")
+        method = request.form.get("method")
 
-    return render_template("new_verification.html")
+        session['country_code'] = country_code
+        session['phone_number'] = phone_number
+
+        api.phones.verification_start(phone_number, country_code, via=method)
+
+        return redirect(url_for("verify"))
+
+    return render_template("phone_verification.html")
 
 
 @app.route("/verify", methods=["GET", "POST"])
 def verify():
     if request.method == "POST":
-        return verify_token()
+            token = request.form.get("token")
+
+            phone_number = session.get("phone_number")
+            country_code = session.get("country_code")
+
+            verification = api.phones.verification_check(phone_number,
+                                                         country_code,
+                                                         token)
+
+            if verification.ok():
+                return Response("<h1>Success!</h1>")
 
     return render_template("verify.html")
 
