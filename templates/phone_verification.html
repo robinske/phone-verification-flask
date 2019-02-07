@@ -1,9 +1,6 @@
 <html>
   <head>
     <title>Phone Verification</title>
-
-    <link rel="stylesheet" media="all" href="https://cdnjs.cloudflare.com/ajax/libs/authy-form-helpers/2.3/form.authy.min.css" data-turbolinks-track="reload" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/authy-form-helpers/2.3/form.authy.min.js" data-turbolinks-track="reload"></script>
   </head>
 
   <body>
@@ -11,11 +8,7 @@
 
     <form action="/phone_verification" accept-charset="UTF-8" method="post">
       <div>
-        <label for="authy-countries">Country code:</label>
-        <select name="country_code" id="authy-countries" data-show-as="number"></select>
-      </div>
-      <div>
-        <label for="phone_number">Phone number:</label>
+        <label for="phone_number">Phone number in <a href="https://www.twilio.com/docs/glossary/what-e164">E.164 format:</a></label>
         <input type="tel" name="phone_number" id="phone_number" />
       </div>
       <div>

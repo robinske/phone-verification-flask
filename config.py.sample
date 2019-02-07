@@ -1,2 +1,7 @@
-AUTHY_API_KEY = <your api key>
-SECRET_KEY = <for managing sessions, can be any text string>
+# Verify Service
+# Create one in the console at twilio.com/console/verify/services
+SERVICE_ID = '<service id here>'
+
+# Set as environment variables
+TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
+TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]

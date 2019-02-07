@@ -1,2 +1,2 @@
 flask==1.0.2
-authy==2.2.3
+twilio==6.24.0

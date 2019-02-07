@@ -1,4 +1,4 @@
-from authy.api import AuthyApiClient
+from twilio.rest import Client
 from flask import (Flask, Response, request, redirect,
     render_template, session, url_for)
 
@@ -8,20 +8,22 @@ app.config.from_object('config')
 app.secret_key = app.config['SECRET_KEY']
 
 
-api = AuthyApiClient(app.config['AUTHY_API_KEY'])
+client = Client(app.config['TWILIO_ACCOUNT_SID'], app.config['TWILIO_AUTH_TOKEN'])
+service_id = app.config['SERVICE_ID']
 
 
 @app.route("/phone_verification", methods=["GET", "POST"])
 def phone_verification():
     if request.method == "POST":
-        country_code = request.form.get("country_code")
         phone_number = request.form.get("phone_number")
         method = request.form.get("method")
 
-        session['country_code'] = country_code
         session['phone_number'] = phone_number
 
-        api.phones.verification_start(phone_number, country_code, via=method)
+        client.verify \
+            .services(service_id) \
+            .verifications \
+            .create(to=phone_number, channel=method)
 
         return redirect(url_for("verify"))
 
@@ -32,15 +34,14 @@ def phone_verification():
 def verify():
     if request.method == "POST":
             token = request.form.get("token")
-
             phone_number = session.get("phone_number")
-            country_code = session.get("country_code")
 
-            verification = api.phones.verification_check(phone_number,
-                                                         country_code,
-                                                         token)
+            verification = client.verify \
+                .services(service_id) \
+                .verification_checks \
+                .create(to=phone_number, code=token)
 
-            if verification.ok():
+            if verification.valid:
                 return Response("<h1>Success!</h1>")
 
     return render_template("verify.html")
