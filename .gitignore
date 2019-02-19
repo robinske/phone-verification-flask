@@ -2,3 +2,4 @@
 config.py
 env/*
 .DS_Store
+.vscode/
